@@ -11,19 +11,23 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
         st = new StringTokenizer(br.readLine());
         int[] dist = new int[N];
-        int answer = 0;
+        long answer = 0;
 
         for(int i = 1; i < N; i++){
             dist[i] = Integer.parseInt(st.nextToken());
         }
         st = new StringTokenizer(br.readLine());
         int[] city = new int[N+1];
+        int minCost = Integer.MAX_VALUE;
         for(int i = 1; i < N; i++){
             city[i] = Integer.parseInt(st.nextToken());
 
-            if(i == 1) answer+=city[i]*dist[i];
-            else if(city[i-1] > city[i]) answer+=city[i]*dist[i];
-            else answer+=city[i-1]*dist[i];
+            if(minCost > city[i]) {
+                answer+=city[i]*dist[i];
+                minCost=city[i];
+            } else {
+                answer+=minCost*dist[i];
+            }
         }
         System.out.println(answer);
     }
