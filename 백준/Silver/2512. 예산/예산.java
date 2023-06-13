@@ -25,15 +25,19 @@ public class Main {
 
         if(total >= sum) System.out.println(max);
         else {
+            max = total/N;
             while(true){
-                max--;
+                max++;
                 sum = 0;
                 for(int i = 0; i < N; i++){
                     if(nums[i] <= max) sum+=nums[i];
                     else sum+=max;
                 }
-                if(sum <= total) {
+                if(sum == total) {
                     System.out.println(max);
+                    break;
+                } else if(sum > total) {
+                    System.out.println(--max);
                     break;
                 }
             }
