@@ -11,36 +11,33 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
         st = new StringTokenizer(br.readLine());
         int[] nums = new int[N];
-        int max = 0;
+        int right = 0;
         int sum = 0;
 
         for(int i = 0; i < N; i++){
             int num = Integer.parseInt(st.nextToken());
-            max = Math.max(num, max);
+            right = Math.max(num, right);
             nums[i] = num;
             sum+=num;
         }
 
         int total = Integer.parseInt(br.readLine());
 
-        if(total >= sum) System.out.println(max);
+        if(total >= sum) System.out.println(right);
         else {
-            max = total/N;
-            while(true){
-                max++;
+            int left = 0;
+            int mid = 0;
+            while(left <= right){
+                mid = (left+right)/2;
                 sum = 0;
                 for(int i = 0; i < N; i++){
-                    if(nums[i] <= max) sum+=nums[i];
-                    else sum+=max;
+                    if(nums[i] <= mid) sum+=nums[i];
+                    else sum+=mid;
                 }
-                if(sum == total) {
-                    System.out.println(max);
-                    break;
-                } else if(sum > total) {
-                    System.out.println(--max);
-                    break;
-                }
+                if(sum <= total) left = mid+1;
+                else if(sum > total) right=mid-1;
             }
+            System.out.println(right);
         }
     }
 }
