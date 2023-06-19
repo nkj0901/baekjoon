@@ -20,24 +20,25 @@ public class Main {
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        Map<Integer, Integer> map = new HashMap<>();
         int sum = 0;
+        int count = 1;
 
         for(int i = 0; i < X; i++){
             sum+=arr[i];
         }
 
         int max = sum;
-        map.put(max, map.getOrDefault(max, 0)+1);
 
         for(int i = 0; i < N-X; i++){
             sum-=arr[i];
             sum+=arr[i+X];
-            map.put(sum, map.getOrDefault(sum, 0)+1);
-            max = Math.max(max, sum);
+            if( sum > max){
+                count = 1;
+                max = sum;
+            } else if(sum == max) count++;
         }
 
         if(max == 0) System.out.println("SAD");
-        else System.out.println(max + " " +  map.get(max));
+        else System.out.println(max + " " + count);
     }
 }
