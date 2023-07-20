@@ -5,11 +5,15 @@ import java.util.*;
 
 public class Main {
 
-    static class Node {
+    static class Node implements Comparable<Node> {
         int e, w;
         Node(int e, int w){
             this.e = e;
             this.w = w;
+        }
+        @Override
+        public int compareTo(Node o) {
+            return this.w-o.w;
         }
     }
     public static void main(String[] args) throws IOException {
@@ -41,9 +45,7 @@ public class Main {
         Arrays.fill(dist, Integer.MAX_VALUE);
 
 
-        PriorityQueue<Node> pq = new PriorityQueue<>((o1, o2) -> {
-            return o1.w - o2.w;
-        });
+        PriorityQueue<Node> pq = new PriorityQueue<>();
 
         for(int i = 0; i < list[1].size(); i++){
             pq.add(list[1].get(i));
