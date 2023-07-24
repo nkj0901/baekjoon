@@ -8,11 +8,11 @@ public class Main {
 
         int N = Integer.parseInt(br.readLine());
         String cur = br.readLine();
-        String target = br.readLine();
-
+        char[] target = br.readLine().toCharArray();
 
         char[] first = cur.toCharArray();
         char[] second = cur.toCharArray();
+        
 
         //맨 앞에 것을 바꿨을 때
         change(first, 0);
@@ -25,13 +25,13 @@ public class Main {
 
     static int[] ni = {-1, 0, 1};
 
-    public static int count(char[] c, String target, int cnt){
+    public static int count(char[] c, char[] target, int cnt){
         for(int i = 1; i < c.length; i++){
-            if(c[i-1] != target.charAt(i-1)) {
+            if(c[i-1] != target[i-1]) {
                 change(c, i); cnt++;
             }
         }
-        if(target.charAt(target.length()-1) != c[c.length-1]) cnt = Integer.MAX_VALUE;
+        if(target[target.length-1] != c[c.length-1]) cnt = Integer.MAX_VALUE;
         return cnt;
     }
 
