@@ -6,10 +6,10 @@ public class Main {
     static List<String> answer;
     static int N;
     static char[] sel;
+    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int T = Integer.parseInt(br.readLine());
 
@@ -17,19 +17,11 @@ public class Main {
             N = Integer.parseInt(br.readLine());
 
             sel = new char[N-1];
-            answer = new ArrayList<>();
             dfs(1, "1");
+            sb.append('\n');
 
-            Collections.sort(answer);
-
-            for(int i = 0; i < answer.size(); i++) {
-                bw.write(answer.get(i));
-                bw.write("\n");
-            }
-            bw.write("\n");
         }
-        bw.flush();
-        bw.close();
+        System.out.println(sb);
         br.close();
     }
 
@@ -38,9 +30,9 @@ public class Main {
             calculate(str);
             return;
         }
+        dfs(n+1, str+" " + String.valueOf(n+1));
         dfs(n+1, str+"+" + String.valueOf(n+1));
         dfs(n+1, str+"-" + String.valueOf(n+1));
-        dfs(n+1, str+" " + String.valueOf(n+1));
     }
 
     public static void calculate(String str){
@@ -70,7 +62,6 @@ public class Main {
                 sum-=n;
             }
         }
-
-        if(sum == 0) answer.add(str);
+        if(sum == 0) sb.append(str).append('\n');
     }
 }
