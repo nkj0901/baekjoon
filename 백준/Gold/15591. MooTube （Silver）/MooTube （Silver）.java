@@ -43,28 +43,26 @@ public class Main {
         for(int q = 0; q < Q; q++) {
             st = new StringTokenizer(br.readLine());
             boolean[] visited = new boolean[N+1];
-            PriorityQueue<Node> pq = new PriorityQueue<>();
-            int[] usado = new int[N+1];
+            Queue<Node> queue = new LinkedList<>();
 
             int K = Integer.parseInt(st.nextToken());
             int V = Integer.parseInt(st.nextToken());
 
-            pq.add(new Node(V, Integer.MAX_VALUE));
-            int answer = -1;
+            queue.add(new Node(V, Integer.MAX_VALUE));
+            int answer = 0;
 
-            while(!pq.isEmpty()){
-                Node cur = pq.poll();
-
-                if(visited[cur.e]) continue;
+            while(!queue.isEmpty()){
+                Node cur = queue.poll();
                 visited[cur.e] = true;
-                if(cur.w >= K) answer++;
 
                 for(int i = 0; i < list[cur.e].size(); i++){
                     Node next = list[cur.e].get(i);
-                    pq.add(new Node(next.e, Math.min(cur.w, next.w)));
+                    if(!visited[next.e] && Math.min(cur.w, next.w) >= K) {
+                        answer++;
+                        queue.add(new Node(next.e, Math.min(cur.w, next.w)));
+                    }
                 }
             }
-
             bw.write(answer+"\n");
         }
         bw.flush();
