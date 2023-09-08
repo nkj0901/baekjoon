@@ -15,26 +15,20 @@ public class Main {
         int[] size = new int[X+1];
 
         for(int i = 2; i <= X; i++) {
-        int min = Integer.MAX_VALUE;
+            size[i] = size[i-1] + 1;
+            arr[i] = i-1;
 
             if(i % 3 == 0) {
-                if(min > size[i/3]){
-                    min = size[i/3];
-                    size[i] = min+1;
+                if(size[i] > size[i/3]){
+                    size[i] = size[i/3] + 1;
                     arr[i] = i/3;
                 }
             }
             if(i % 2 == 0) {
-                if(min > size[i/2]) {
-                    min = size[i/2];
-                    size[i] = min+1;
+                if(size[i] > size[i/2]) {
+                    size[i] = size[i/2] + 1;
                     arr[i] = i/2;
-
                 }
-            }
-            if(min > size[i-1]) {
-                size[i] = size[i-1] + 1;
-                arr[i] = i-1;
             }
         }
 
@@ -46,7 +40,7 @@ public class Main {
             sb.append(cur + " ");
             cur = arr[cur];
         }
-
+        
         System.out.println(sb);
     }
 }
