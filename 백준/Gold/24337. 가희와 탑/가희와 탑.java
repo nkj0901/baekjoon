@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -18,39 +20,27 @@ public class Main {
             return;
         }
 
-        int[] arr = new int[N];
+        List<Integer> list = new ArrayList<>();
 
         //왼쪽 채우기
-        for(int i = 0; i < a-1; i++) {
-            arr[i] = i+1;
+        for(int i = 1; i < a; i++) {
+            list.add(i);
         }
-        arr[a-1] = Math.max(a, b);
-        if(a > 1) arr[a-1] = 1;
-
-        //중간 채우기
-        for(int i = a; i < N-b; i++) {
-            arr[i] = 1;
-        }
+        list.add(Math.max(a, b));
 
         //오른쪽 채우기
-        arr[N-b] = Math.max(a, b);
-        if(a == 1 && b != N) arr[N-b] = 1;
-        for(int i = N-1; i > N-b; i--) {
-            arr[i] = N-i;
+        for(int i = b-1; i >= 1; i--) {
+           list.add(i);
         }
 
         //1을 앞으로 다 빼기
-        for(int i = 1; i < N-1; i++) {
-            if(arr[i] == 1) {
-                for(int j = i; j >= 1; j--) {
-                    arr[j] = arr[j-1];
-                }
-                arr[1] = 1;
-            }
+        while(list.size() != N) {
+            list.add(1, 1);
         }
 
         for(int i = 0; i < N; i++) {
-            System.out.print(arr[i] + " ");
+            sb.append(list.get(i) + " ");
         }
+        System.out.println(sb);
     }
 }
