@@ -31,7 +31,7 @@ public class Main {
 
         dfs(0);
 
-        System.out.println(sb);
+        System.out.println(sb.toString());
     }
     private static void dfs(int idx) {
         if(idx == M) {
