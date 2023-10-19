@@ -27,7 +27,7 @@ public class Main {
         Arrays.sort(number);
 
         sel = new int[M];
-        visited = new boolean[N+1];
+        visited = new boolean[N];
 
         dfs(0);
 
@@ -36,7 +36,7 @@ public class Main {
     private static void dfs(int idx) {
         if(idx == M) {
             for(int i = 0; i < M; i++) {
-                sb.append(sel[i] + " ");
+                sb.append(sel[i]).append(" ");
             }
             sb.append("\n");
             return;
