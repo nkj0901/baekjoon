@@ -27,28 +27,23 @@ public class Main {
         sel = new int[N];
         answer = 0;
 
-        perm(0);
+        perm(0, 500);
 
         System.out.println(answer);
     }
 
-    static void perm(int idx){
+    static void perm(int idx, int weight){
         if(idx == N) {
-            int sum = 500;
-            for(int i = 0; i < N; i++) {
-                sum-=K;
-                sum+=arr[sel[i]];
-                if(sum < 500) break;
-            }
-            if(sum >= 500) answer++;
+            answer++;
             return;
         }
 
         for(int i = 0; i < N; i++) {
             if(visited[i]) continue;
+            if(weight-K+arr[i] < 500) continue;
             visited[i] = true;
             sel[idx] = i;
-            perm(idx+1);
+            perm(idx+1, weight-K+arr[i]);
             visited[i] = false;
         }
     }
