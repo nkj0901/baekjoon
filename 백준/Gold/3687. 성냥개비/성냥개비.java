@@ -7,25 +7,25 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String[] minDp = new String[101];
+        long[] minDp = new long[101];
 
-        minDp[2] = "1";
-        minDp[3] = "7";
-        minDp[4] = "4";
-        minDp[5] = "2";
-        minDp[6] = "6";
-        minDp[7] = "8";
-        minDp[8] = "10";
+        minDp[2] = 1;
+        minDp[3] = 7;
+        minDp[4] = 4;
+        minDp[5] = 2;
+        minDp[6] = 6;
+        minDp[7] = 8;
+        minDp[8] = 10;
 
-        String[] num = {"1", "7", "4", "2", "0", "8"};
+        int[] num = {1, 7, 4, 2, 0, 8};
 
         //최소값
-        String min;
+        long min;
         for(int i = 9; i <= 100; i++) {
             for(int j = 2; j <= 7; j++) {
-                min = minDp[i-j]+num[j-2];
-                if(minDp[i] == null) minDp[i] = min;
-                minDp[i] = valueOf(Math.min(Long.parseLong(minDp[i]), Long.parseLong(min)));
+                min = minDp[i-j]*10+num[j-2];
+                if(minDp[i] == 0) minDp[i] = min;
+                minDp[i] = Math.min(minDp[i],min);
             }
         }
 
