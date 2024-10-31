@@ -1,82 +1,78 @@
 import java.util.*;
 import java.io.*;
-    
+
 class Solution {
     
-    static class Genre{
-        int totalCnt;
-        List<Music> musics = new ArrayList<>();
+    class Music implements Comparable<Music> {
+        int play;
+        int musicNum;
+        
+        Music(int play, int musicNum) {
+            this.play = play;
+            this.musicNum = musicNum;
+        }
+        
+        @Override
+        public int compareTo(Music o1) {
+            return o1.play - this.play;
+        }
     }
     
-    static class Music {
-        int number;
-        int play;
-        Music(int number, int play) {
-            this.number = number;
-            this.play = play;
+    class Genre {
+        String name;
+        int totalNum;
+        List<Music> list = new ArrayList<>();
+        
+        Genre(String name, int totalNum) {
+            this.totalNum = totalNum;
         }
     }
     
     public int[] solution(String[] genres, int[] plays) {
         
-        int L = genres.length;
-        
-        //토탈 몇개인지 확인
         Map<String, Genre> map = new HashMap<>();
         
-        for(int i = 0; i < L; i++) {
-            String genre = genres[i];
-            int play = plays[i];
+        for(int i = 0; i < genres.length; i++) {
             
-            Genre curGenre;
-            
-            if(map.containsKey(genre)) {
-                curGenre = map.get(genre);
-            } else curGenre = new Genre();
-            curGenre.totalCnt+=play;
-            // System.out.println(curGenre.totalCnt);
-            
-            curGenre.musics.add(new Music(i, play));
-            
-            map.put(genre, curGenre);
-        }
-        List<Genre> list = new ArrayList<>();
-        
-        for(String key : map.keySet()){
-            Genre genre = map.get(key);
-            list.add(genre);
-            Collections.sort(genre.musics, (o1, o2) -> {
-                if(o2.play > o1.play) return 1;
-                else if(o2.play == o1.play) return o1.number - o2.number;
-                else return -1;
-            });
+            if(map.containsKey(genres[i])){
+                Genre genre = map.get(genres[i]);
+                genre.totalNum+=plays[i];
+                genre.list.add(new Music(plays[i],i));
+                map.put(genres[i], genre);
+            } else {
+                Genre newGenre = new Genre(genres[i], plays[i]);
+                newGenre.list.add(new Music(plays[i], i));
+                map.put(genres[i], newGenre);
+            }
         }
         
-        Collections.sort(list, (o1, o2) -> {
-            return o2.totalCnt - o1.totalCnt;
+        List<Genre> g = new ArrayList<>();
+        for(String title : map.keySet()){
+            g.add(map.get(title));
+        }
+        
+        Collections.sort(g, new Comparator<Genre>(){
+            @Override
+            public int compare(Genre o1, Genre o2) {
+                return o2.totalNum - o1.totalNum;
+            }
         });
         
-        List<Integer> list2 = new ArrayList<>();
-        for(int i = 0; i < list.size(); i++) {
+        List<Integer> listAnswer = new ArrayList<>();
+        for(int i = 0; i < g.size(); i++) {
+            Genre curGenre = g.get(i);
+            Collections.sort(curGenre.list);
             
-            List<Music> musics = list.get(i).musics;
-            Collections.sort(musics, (o1, o2) -> {
-                if(o2.play > o1.play) return 1;
-                else if(o2.play == o1.play) return o1.number - o2.number;
-                else return -1;
-            });
-            
-            if(musics.size() > 1) {
-                list2.add(musics.get(0).number);
-                list2.add(musics.get(1).number);
-            } else list2.add(musics.get(0).number);
+            listAnswer.add(curGenre.list.get(0).musicNum);
+            if(curGenre.list.size() > 1) listAnswer.add(curGenre.list.get(1).musicNum);
         }
         
-        int[] answer = new int[list2.size()];
-        for(int i = 0; i < list2.size(); i++) {
-            answer[i] = list2.get(i);
-        }
+        // System.out.println(listAnswer);
+        int[] answer = new int[listAnswer.size()];
         
+        for(int i = 0; i <answer.length; i++) {
+            answer[i] = listAnswer.get(i);
+        }
         return answer;
     }
 }
