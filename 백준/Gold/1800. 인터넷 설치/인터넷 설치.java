@@ -11,6 +11,7 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         P = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
+        int answer = -1;
 
         adj = new ArrayList[N + 1];
         for (int i = 1; i <= N; i++) adj[i] = new ArrayList<>();
@@ -21,67 +22,84 @@ public class Main {
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
             int c = Integer.parseInt(st.nextToken());
+            maxCost = Math.max(c, maxCost);
             adj[a].add(new Edge(b, c));
             adj[b].add(new Edge(a, c));
-            maxCost = Math.max(maxCost, c);
         }
 
-        int left = 0, right = maxCost, ans = -1;
-        while (left <= right) {
+        int left = 0;
+        int right = maxCost;
+
+        while(left <= right) {
             int mid = (left + right) / 2;
-            if (canReach(mid)) { // mid 이하의 비용으로 연결 가능?
-                ans = mid;
+            if(canReach(mid)) {
+                answer = mid;
                 right = mid - 1;
             } else {
                 left = mid + 1;
             }
         }
 
-        System.out.println(ans);
+        System.out.println(answer);
     }
 
-    // BFS or Dijkstra-like 탐색
-    static boolean canReach(int limit) {
-        int[] dist = new int[N + 1];
+    public static boolean canReach(int mid) {
+
+        //mid 이하의 선만 사용했을 때 무료로 사용해야하는 선이 K개 이하인지 확인
+        PriorityQueue<State> pq = new PriorityQueue<>();
+        //최소 무료 횟수
+        int[] dist = new int[N+1];
         Arrays.fill(dist, Integer.MAX_VALUE);
         dist[1] = 0;
-
-        PriorityQueue<State> pq = new PriorityQueue<>();
+        
+        //1부터 시작
         pq.add(new State(1, 0));
 
-        while (!pq.isEmpty()) {
+        while(!pq.isEmpty()) {
             State cur = pq.poll();
-            if (cur.used > dist[cur.idx]) continue;
-            if (cur.idx == N) return true; // 도착 성공
 
-            for (Edge next : adj[cur.idx]) {
-                int nextUsed = cur.used + (next.weight > limit ? 1 : 0);
-                if (nextUsed <= K && nextUsed < dist[next.to]) {
-                    dist[next.to] = nextUsed;
-                    pq.add(new State(next.to, nextUsed));
+            if(cur.to == N) return true;
+
+            //연결되어 있는 모든 것들 확인하기
+            for(int i = 0; i < adj[cur.to].size(); i++) {
+                Edge next = adj[cur.to].get(i);
+
+                //만약 무료 횟수 초과하면 패쓰~
+                if(cur.used + (next.weight > mid ? 1 : 0) > K) continue;
+
+                //더 적게 써서 도달할 수 있으면 update하고 계속 탐색
+                if(dist[next.to] > cur.used + (next.weight > mid ? 1 : 0)) {
+                    dist[next.to] = cur.used + (next.weight > mid ? 1 : 0);
+                    pq.add(new State(next.to, cur.used + (next.weight > mid ? 1 : 0)));
                 }
             }
+
         }
         return false;
     }
 
     static class Edge {
         int to, weight;
+
         Edge(int to, int weight) {
             this.to = to;
             this.weight = weight;
         }
+
     }
 
     static class State implements Comparable<State> {
-        int idx, used; // used = 무료설치 사용횟수
-        State(int idx, int used) {
-            this.idx = idx;
+        int to, used;
+
+        State(int to, int used) {
+            this.to = to;
             this.used = used;
         }
+
         @Override
-        public int compareTo(State o) {
-            return this.used - o.used;
+        public int compareTo(State e) {
+            return this.used - e.used;
         }
     }
+
 }
