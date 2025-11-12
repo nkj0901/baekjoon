@@ -1,33 +1,28 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.util.Arrays;
 
 public class Main {
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
 
-		int N = Integer.parseInt(br.readLine());
-		int five = 0;
-		int three = 0;
+        int[] dp = new int[N+1];
+        Arrays.fill(dp, 5001);
+        dp[0] = 0;
+//        dp[1] = 1;
+//        dp[2] = 1;
 
-		while (N / 3 > 0) {
-			if (N % 5 == 0)
-				break;
-			three++;
-			N = N - 3;
-		}
+        for(int i = 3; i <= N; i++) {
+            dp[i] = Math.min(dp[i], dp[i-3] + 1);
+        }
 
-		while (N / 5 > 0) {
-			five++;
-			N = N - 5;
-		}
-		if (N == 0) {
-			System.out.println(three + five);
-		} else {
-			System.out.println("-1");
-		}
-	}
+        for(int i = 5; i <= N; i++) {
+            dp[i] = Math.min(dp[i], dp[i-5] + 1);
+        }
+
+//        System.out.println(Arrays.toString(dp));
+        System.out.println(dp[N] == 5001 ? -1 : dp[N]);
+    }
 }
