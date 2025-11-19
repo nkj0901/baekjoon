@@ -1,37 +1,24 @@
 import java.io.*;
 import java.util.*;
 
-class Solution {
-    boolean[] sel;
+class Solution {    
     int[] numbers;
-    int l, target, answer;
+    int target;
     
     public int solution(int[] numbers, int target) {
-        answer = 0;
-        l = numbers.length;
-        sel = new boolean[l];
+        int answer = 0;
         this.numbers = numbers;
         this.target = target;
-        
-        dfs(0);
+        answer = dfs(0, 0);
         return answer;
     }
     
-    private void dfs(int idx) {
-        if(idx == l) {
-            // System.out.println(Arrays.toString(sel));
-            int sum = 0;
-            for(int i = 0; i < l; i++) {
-                if(sel[i]) sum+=numbers[i];
-                else sum-=numbers[i];
-            }
-            if(sum == target) answer++;
-            return;
+    private int dfs(int idx, int sum) {
+        if(idx == numbers.length) {
+            if(sum == target) return 1;
+            else return 0;
         }
         
-        sel[idx] = true;
-        dfs(idx+1);
-        sel[idx] = false;
-        dfs(idx+1);
-    }
+        return dfs(idx + 1, sum + numbers[idx]) + dfs(idx + 1, sum - numbers[idx]);
+    };
 }
