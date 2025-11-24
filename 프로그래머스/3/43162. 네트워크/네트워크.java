@@ -1,34 +1,44 @@
 import java.util.*;
+import java.io.*;
 
 class Solution {
+    
+    int[] p;
+    
     public int solution(int n, int[][] computers) {
         int answer = 0;
-       
-        Queue<Integer> q = new LinkedList();
-        boolean[] visited = new boolean[n];
-
+        p = new int[n];
+        
         for(int i = 0; i < n; i++) {
-            for(int j = 0; j < n; j++) {
-                        
-                if(computers[i][j] == 1 && !visited[j]) q.add(j);
-                else continue;               
-                answer++;
-                
-                while(!q.isEmpty()) {
-                    int cur = q.poll();
-                    
-                    if(visited[cur]) continue;
-                    visited[cur] = true;
-                    
-                    for(int z = 0; z < n; z++) {
-                        if(computers[cur][z] == 1) q.add(z);
-                    }
-
-                }
-                
+            make_set(i);
+        }
+        
+        for(int i = 0; i < n; i++) {
+            for(int j= 0; j < n; j++) {
+                if(computers[i][j] == 1 && i != j) union_set(i, j);
             }
         }
+        
+        // System.out.println(Arrays.toString(p));
+        
+        Set<Integer> set = new HashSet();
+        for(int i = 0; i < n; i++) {
+            set.add(find_set(i));
+        }    
 
-        return answer;
+        return set.size();
+    }
+    
+    public void make_set(int x) {
+        p[x] = x;
+    }
+    
+    public int find_set(int x) {
+        if(p[x] != x) p[x] = find_set(p[x]);
+        return p[x];
+    }
+    
+    public void union_set(int x, int y) {
+        p[find_set(y)] = find_set(x);
     }
 }
