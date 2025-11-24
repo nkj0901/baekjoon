@@ -1,47 +1,51 @@
 import java.util.*;
 
 class Solution {
-    int min;
+    
+    String target;
+    String[] words;
     boolean[] visited;
+    int answer;
     
     public int solution(String begin, String target, String[] words) {
-        int answer = 0;
-        
-        min = Integer.MAX_VALUE;
+        answer = Integer.MAX_VALUE;
         visited = new boolean[words.length];
+        this.words = words;
+        this.target = target;
+        if(!Arrays.stream(words).anyMatch(s -> s.equals(target))) return 0;
         
-        dfs(0, begin, 0, target, words);
+        dfs(0, begin);
         
-        if(min == Integer.MAX_VALUE) answer = 0;
-        else answer = min;
+        
         return answer;
     }
     
-    private void dfs(int idx, String now, int cnt, String target, String[] words) {
-        
-        if(cnt >= min) return;
-        
-        if(idx >= words.length) {  
+    private void dfs(int cnt, String cur) {
+        if(cur.equals(target)) {
+            answer = Math.min(cnt, answer);
             return;
         }
         
-        if(now.equals(target)){
-            min = Math.min(min, cnt);
-            return;
-        }
+        if(cnt >= answer) return;
         
-        int count;
         for(int i = 0; i < words.length; i++) {
+            
             if(visited[i]) continue;
-            count = 0;
-            for(int j = 0; j < now.length(); j++) {
-                if(now.charAt(j) != words[i].charAt(j)) count++;
+            
+            String str = words[i];
+            
+            int diff = 0;
+            //단어 하나씩 보면서 1개 다른지 보기
+            for(int j = 0; j < str.length(); j++) {
+                if(str.charAt(j) != cur.charAt(j)) diff++;
+                if(diff > 1) break;
             }
-            if(count == 1) {
+            
+            if(diff == 1) {
                 visited[i] = true;
-                dfs(i, words[i], cnt+1, target, words);
-                visited[i] = false;
+                dfs(cnt+1, str);
+                visited[i] = false;                
             }
-        }       
+        }
     }
 }
