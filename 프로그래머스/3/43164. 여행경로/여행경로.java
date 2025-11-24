@@ -1,45 +1,56 @@
 import java.util.*;
-import java.io.*;
-
+import java.io.*;    
+    
+    
 class Solution {
     
-    static String[] answer;
-    static boolean[] useCheck;
-    static boolean isAnswer;
-    static int L;
-    
-    public String[] solution(String[][] tickets) {
-        L = tickets.length;
-        answer = new String[tickets.length + 1];
-        useCheck = new boolean[L];
+    class Node {
+        String name;
+        String idx;
+        String visit;
+        int cnt;
         
-        //ticket 알파벳순으로 정렬
-        Arrays.sort(tickets, (String[] o1, String[] o2) -> {
-            return o1[1].compareTo(o2[1]);
-        });
-        
-        answer[0] = "ICN";
-        isAnswer = false;
-        dfs("ICN", 1, tickets);
-        return answer;
+        Node(String name, String idx, String visit, int cnt) {
+            this.name = name;
+            this.idx = idx;
+            this.visit = visit;
+            this.cnt = cnt;
+        } 
     }
     
-    private void dfs(String next, int cnt, String[][] tickets) {
+    public String[] solution(String[][] tickets) {
+        int n = tickets.length;
+        boolean[] visited = new boolean[n+1];
         
-        if(cnt > L) {
-            isAnswer = true;
-            return;
-        }
         
-        for(int i = 0; i < L; i++) {
-            if(useCheck[i]) continue;
-            if(tickets[i][0].equals(next)) {
-                useCheck[i] = true;
-                answer[cnt] = tickets[i][1];
-                dfs(tickets[i][1], cnt+1, tickets);
-                if(isAnswer) return;
-                useCheck[i] = false;
+        List<String> list = new ArrayList();
+        Queue<Node> q = new LinkedList();
+        q.add(new Node("ICN", " ", "ICN", 0));
+        
+        //티켓 갯수만큼 돌면서 다음 갈 곳 찾기
+        while(!q.isEmpty()) {
+            
+            Node cur = q.poll();
+            
+            if(cur.cnt == n) {
+                // System.out.println(cur.visit);
+                // System.out.println(cur.idx);
+                list.add(cur.visit);
+                continue;
             }
+            
+            //cur에서 출발하는 항공권 찾기
+            for(int i = 0; i < n; i++) {
+
+                if(cur.idx.contains(" " + i + " ")) continue;
+                if(tickets[i][0].equals(cur.name)) {
+                    q.add(new Node(tickets[i][1], cur.idx + i + " " , cur.visit + "_" + tickets[i][1], cur.cnt+1));
+                }
+            }           
         }
+        
+        Collections.sort(list);
+        String[] ans = list.get(0).split("_");
+        return ans;
     }
 }
